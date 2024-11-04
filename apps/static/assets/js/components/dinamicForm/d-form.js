@@ -2,15 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Estado para controlar qué formularios están abiertos
     const formulariosAbiertos = new Set();
     
-    // Manejar clicks en los botones de exámenes
-    document.querySelectorAll('[data-form]').forEach(button => {
-        button.addEventListener('click', async function() {
+    // Manejar clicks en los elementos del dropdown
+    document.querySelectorAll('.dropdown-item[data-form]').forEach(item => {
+        item.addEventListener('click', async function(event) {
+            event.preventDefault(); // Prevenir la navegación
+
             const formType = this.dataset.form;
-            
-            // Toggle del estado activo del botón
-            this.classList.toggle('btn-primary');
-            this.classList.toggle('btn-outline-primary');
-            
+
             if (formulariosAbiertos.has(formType)) {
                 // Si el formulario está abierto, lo cerramos
                 document.getElementById(`container-${formType}`).remove();
@@ -18,7 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // Si el formulario está cerrado, lo abrimos
                 try {
-                    const response = await fetch(`/api/formularios/${formType}/`);
+                    const response = await fetch(`templates/sleepexams/${formType}/`);
+                    console.log("Response status:", response.status);
                     if (response.ok) {
                         const formHtml = await response.text();
                         const container = document.createElement('div');
